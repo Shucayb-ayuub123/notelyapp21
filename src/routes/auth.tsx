@@ -53,11 +53,14 @@ function AuthPage() {
       },
     });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     if (data.session) {
       navigate({ to: "/notes", replace: true });
     } else {
-      toast.success("Check your email to confirm your account, then sign in.");
+      toast.success("Check your email to confirm your account, then log in.");
     }
   }
 
@@ -66,9 +69,13 @@ function AuthPage() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     navigate({ to: "/notes", replace: true });
   }
+
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-12">
