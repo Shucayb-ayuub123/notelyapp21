@@ -11,7 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { listNotes, createNote, getMyProfile } from "@/lib/notes.functions";
 
-export const Route = createFileRoute("/_authenticated/notes")({
+export const Route = createFileRoute("/_authenticated/notes/")({
   head: () => ({
     meta: [
       { title: "My Notes — Inkwell" },
