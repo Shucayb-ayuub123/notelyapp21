@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { NotebookPen, Plus, LogOut } from "lucide-react";
+import { NotebookPen, Plus, LogOut, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { listNotes, createNote, getMyProfile } from "@/lib/notes.functions";
+import { generateNoteContent } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/_authenticated/notes/")({
   head: () => ({
