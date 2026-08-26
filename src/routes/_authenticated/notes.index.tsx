@@ -32,6 +32,7 @@ function NotesPage() {
   const fetchNotes = useServerFn(listNotes);
   const fetchProfile = useServerFn(getMyProfile);
   const addNote = useServerFn(createNote);
+  const generateTasks = useServerFn(generateNoteContent);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -46,6 +47,15 @@ function NotesPage() {
       setContent("");
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success("Note created");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const generate = useMutation({
+    mutationFn: (noteTitle: string) => generateTasks({ data: { title: noteTitle } }),
+    onSuccess: (res) => {
+      setContent((prev) => (prev.trim() ? `${prev.trim()}\n${res.content}` : res.content));
+      toast.success("Tasks generated");
     },
     onError: (e: Error) => toast.error(e.message),
   });
