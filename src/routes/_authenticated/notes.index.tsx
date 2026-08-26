@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { NotebookPen, Plus, LogOut } from "lucide-react";
+import { NotebookPen, Plus, LogOut, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { listNotes, createNote, getMyProfile } from "@/lib/notes.functions";
+import { generateNoteContent } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/_authenticated/notes/")({
   head: () => ({
@@ -31,6 +32,7 @@ function NotesPage() {
   const fetchNotes = useServerFn(listNotes);
   const fetchProfile = useServerFn(getMyProfile);
   const addNote = useServerFn(createNote);
+  const generateTasks = useServerFn(generateNoteContent);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -45,6 +47,15 @@ function NotesPage() {
       setContent("");
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success("Note created");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const generate = useMutation({
+    mutationFn: (noteTitle: string) => generateTasks({ data: { title: noteTitle } }),
+    onSuccess: (res) => {
+      setContent((prev) => (prev.trim() ? `${prev.trim()}\n${res.content}` : res.content));
+      toast.success("Tasks generated");
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -96,7 +107,22 @@ function NotesPage() {
           onChange={(e) => setContent(e.target.value)}
           className="resize-none border-0 px-0 shadow-none focus-visible:ring-0"
         />
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={generate.isPending}
+            onClick={() => {
+              if (!title.trim()) {
+                toast.error("Write a title first");
+                return;
+              }
+              generate.mutate(title.trim());
+            }}
+          >
+            <Sparkles className="size-4" />
+            {generate.isPending ? "Writing…" : "Generate tasks"}
+          </Button>
           <Button type="submit" disabled={create.isPending}>
             <Plus className="size-4" /> {create.isPending ? "Saving…" : "Add note"}
           </Button>
