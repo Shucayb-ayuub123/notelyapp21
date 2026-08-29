@@ -20,6 +20,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { getNote, updateNote, deleteNote } from "@/lib/notes.functions";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/_authenticated/notes/$noteId")({
   head: () => ({
@@ -62,7 +63,8 @@ function NoteDetail() {
   }, [note.data, hydrated]);
 
   const save = useMutation({
-    mutationFn: () => saveNote({ data: { id: noteId, title: title.trim() || "Untitled", content } }),
+    mutationFn: () =>
+      saveNote({ data: { id: noteId, title: title.trim() || "Untitled", content } }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       toast.success("Note saved");
@@ -82,11 +84,14 @@ function NoteDetail() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-10">
-      <Button asChild variant="ghost" size="sm">
-        <Link to="/notes">
-          <ArrowLeft className="size-4" /> All notes
-        </Link>
-      </Button>
+      <div className="flex items-center justify-between">
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/notes">
+            <ArrowLeft className="size-4" /> All notes
+          </Link>
+        </Button>
+        <ThemeToggle />
+      </div>
 
       {note.isLoading && <Skeleton className="mt-6 h-64 w-full rounded-xl" />}
 

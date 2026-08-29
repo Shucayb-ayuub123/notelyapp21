@@ -11,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { listNotes, createNote, getMyProfile } from "@/lib/notes.functions";
 import { generateNoteContent } from "@/lib/ai.functions";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/_authenticated/notes/")({
   head: () => ({
@@ -78,9 +79,12 @@ function NotesPage() {
             {profile.data?.name ? `${profile.data.name}'s notes` : "My notes"}
           </h1>
         </div>
-        <Button variant="outline" size="sm" onClick={signOut}>
-          <LogOut className="size-4" /> Sign out
-        </Button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button variant="outline" size="sm" onClick={signOut}>
+            <LogOut className="size-4" /> Sign out
+          </Button>
+        </div>
       </header>
 
       <form

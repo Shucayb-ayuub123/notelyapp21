@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { NotebookPen } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -76,13 +77,15 @@ function AuthPage() {
     navigate({ to: "/notes", replace: true });
   }
 
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-12">
-      <Link to="/" className="mb-8 flex items-center gap-2 font-display text-lg font-semibold">
-        <NotebookPen className="size-5 text-primary" />
-        Inkwell
-      </Link>
+      <div className="mb-8 flex w-full max-w-md items-center justify-between">
+        <Link to="/" className="flex items-center gap-2 font-display text-lg font-semibold">
+          <NotebookPen className="size-5 text-primary" />
+          Inkwell
+        </Link>
+        <ThemeToggle />
+      </div>
 
       <div className="paper-card w-full max-w-md p-6 sm:p-8">
         <Tabs defaultValue="signin">
